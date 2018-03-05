@@ -1,0 +1,102 @@
+package me.hacksmuch.images;
+
+import javafx.scene.image.Image;
+
+public class ImageUtils
+{
+	private final Image white_king;
+	private final Image white_queen;
+	private final Image white_bishop;
+	private final Image white_knight;
+	private final Image white_rook;
+	private final Image white_pawn;
+
+	private final Image black_king;
+	private final Image black_queen;
+	private final Image black_bishop;
+	private final Image black_knight;
+	private final Image black_rook;
+	private final Image black_pawn;
+
+	public ImageUtils()
+	{
+		white_king = toImage("white_king");
+		white_queen = toImage("white_queen");
+		white_bishop = toImage("white_bishop");
+		white_knight = toImage("white_knight");
+		white_rook = toImage("white_rook");
+		white_pawn = toImage("white_pawn");
+
+		black_king = toImage("black_king");
+		black_queen = toImage("black_queen");
+		black_bishop = toImage("black_bishop");
+		black_knight = toImage("black_knight");
+		black_rook = toImage("black_rook");
+		black_pawn = toImage("black_pawn");
+	}
+
+	private Image toImage(String imagename)
+	{
+		return new Image(getClass().getResource(String.format("%s.png", imagename)).toString());
+	}
+
+	public final Image getWhiteKing()
+	{
+		return white_king;
+	}
+
+	public final Image getWhiteQueen()
+	{
+		return white_queen;
+	}
+
+	public final Image getWhiteBishop()
+	{
+		return white_bishop;
+	}
+
+	public final Image getWhiteKnight()
+	{
+		return white_knight;
+	}
+
+	public final Image getWhiteRook()
+	{
+		return white_rook;
+	}
+
+	public final Image getWhitePawn()
+	{
+		return white_pawn;
+	}
+
+	public final Image getBlackKing()
+	{
+		return black_king;
+	}
+
+	public final Image getBlackQueen()
+	{
+		return black_queen;
+	}
+
+	public final Image getBlackBishop()
+	{
+		return black_bishop;
+	}
+
+	public final Image getBlackKnight()
+	{
+		return black_knight;
+	}
+
+	public final Image getBlackRook()
+	{
+		return black_rook;
+	}
+
+	public final Image getBlackPawn()
+	{
+		return black_pawn;
+	}
+}
