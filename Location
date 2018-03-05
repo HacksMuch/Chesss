@@ -1,0 +1,106 @@
+package me.hacksmuch;
+
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import me.hacksmuch.pieces.King;
+import me.hacksmuch.pieces.Knight;
+import me.hacksmuch.pieces.Piece;
+import me.hacksmuch.pieces.Team;
+
+public class Location extends BorderPane
+{
+	private Piece piece;
+	private final int row;
+	private final int column;
+	private final Color defaultcolor;
+
+	Location(Chess chess, boolean color, int row, int column)
+	{
+		this.row = row;
+		this.column = column;
+
+		setPrefSize(75, 75);
+		defaultcolor = booleanToColor(color);
+		setStyle("-fx-border-color: darkgray; -fx-border-width: 2px;");
+		drawDefaultColor();
+
+		setOnMousePressed(e -> {
+			if(chess.getSelected() != null && chess.getSelected().canMove(this))
+			{
+				System.out.println("move");
+				chess.getSelected().Move(this);
+			} else if(hasPiece())
+			{
+				System.out.println("Select");
+				if(chess.getSelected() != null && chess.getSelected().equals(piece))
+				{
+					chess.deselect();
+				} else if(chess.getTurn() == 0 ? getPieceTeam() == Team.BLACK : getPieceTeam() == Team.WHITE)
+				{
+					piece.select();
+				}
+			} else
+			{
+				System.out.println("Deselect");
+				chess.deselect();
+			}
+		});
+	}
+
+	public void drawDefaultColor()
+	{
+		JavaFXUtils.setBackground(this, defaultcolor);
+	}
+
+	private Color booleanToColor(boolean color)
+	{
+		return color ? Color.ALICEBLUE : Color.GREEN;
+	}
+
+	public void move()
+	{
+		piece = null;
+		setCenter(null);
+	}
+
+	public boolean hasPiece()
+	{
+		return piece != null;
+	}
+
+	public Team getPieceTeam()
+	{
+		return piece.getTeam();
+	}
+
+	public void setPiece(Piece piece)
+	{
+		this.piece = piece;
+		setCenter(piece);
+	}
+
+	public int getRow()
+	{
+		return row;
+	}
+
+	public int getColumn()
+	{
+		return column;
+	}
+
+	public void mark(Color markcolor)
+	{
+		JavaFXUtils.setBackground(this, markcolor);
+	}
+
+	public boolean hasKing()
+	{
+		return hasPiece() && piece instanceof King;
+	}
+
+	public Piece getPiece()
+	{
+		return piece;
+	}
+}
