@@ -1,0 +1,40 @@
+package me.hacksmuch;
+
+import javafx.scene.layout.GridPane;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+class Board extends GridPane
+{
+	private final List<Location> locations = new ArrayList<>();
+	private boolean color;
+
+	Board(Chess chess)
+	{
+		for(int row = 0; row < 8; row++)
+		{
+			Location[] locations = new Location[8];
+			for(int column = 0; column < 8; column++)
+			{
+				locations[column] = new Location(chess, color, row, column);
+				color = !color;
+				this.locations.add(locations[column]);
+			}
+			addRow(row, locations);
+			color = !color;
+		}
+	}
+
+	public Location getLocation(int row, int column)
+	{
+		System.out.println(row + " " + column);
+		return locations.stream().filter(l -> l.getRow() == row && l.getColumn() == column).findFirst().get();
+	}
+
+	public List<Location> getLocations()
+	{
+		return locations;
+	}
+}
