@@ -1,0 +1,315 @@
+package me.hacksmuch;
+
+import me.hacksmuch.pieces.King;
+import me.hacksmuch.pieces.Knight;
+import me.hacksmuch.pieces.Piece;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public final class Moves
+{
+	private final Chess chess;
+
+	Moves(Chess chess)
+	{
+		this.chess = chess;
+	}
+
+	public void apply75Degrees(Piece piece, Location location)
+	{
+		//TOP RIGHT
+		int column = location.getColumn() + 1;
+		for(int row = location.getRow() + 1; row <= 7 && column <= 7; row++, column++)
+		{
+			Location targetlocation = chess.getLocation(row, column);
+			if(targetlocation.hasPiece() && targetlocation.getPieceTeam() == piece.getTeam()) break;
+			piece.addPossibleLocation(targetlocation);
+			if(targetlocation.hasPiece()) break;
+		}
+
+		//TOP LEFT
+		column = location.getColumn() - 1;
+		for(int row = location.getRow() + 1; row <= 7 && column >= 0; row++, column--)
+		{
+			Location targetlocation = chess.getLocation(row, column);
+			if(targetlocation.hasPiece() && targetlocation.getPieceTeam() == piece.getTeam()) break;
+			piece.addPossibleLocation(targetlocation);
+			if(targetlocation.hasPiece()) break;
+		}
+
+		//BOTTOM RIGHT
+		column = location.getColumn() + 1;
+		for(int row = location.getRow() - 1; row >= 0 && column <= 7; row--, column++)
+		{
+			Location targetlocation = chess.getLocation(row, column);
+			if(targetlocation.hasPiece() && targetlocation.getPieceTeam() == piece.getTeam()) break;
+			piece.addPossibleLocation(targetlocation);
+			if(targetlocation.hasPiece()) break;
+		}
+
+		//BOTTOM LEFT
+		column = location.getColumn() - 1;
+		for(int row = location.getRow() - 1; row >= 0 && column >= 0; row--, column--)
+		{
+			Location targetlocation = chess.getLocation(row, column);
+			if(targetlocation.hasPiece() && targetlocation.getPieceTeam() == piece.getTeam()) break;
+			piece.addPossibleLocation(targetlocation);
+			if(targetlocation.hasPiece()) break;
+		}
+	}
+
+	public void applyFowards(Piece piece, Location location)
+	{
+		//TOP
+		for(int row = location.getRow() + 1; row <= 7; row++)
+		{
+			Location targetlocation = chess.getLocation(row, location.getColumn());
+			if(targetlocation.hasPiece() && targetlocation.getPieceTeam() == piece.getTeam()) break;
+			piece.addPossibleLocation(targetlocation);
+			if(targetlocation.hasPiece()) break;
+		}
+
+		//BOTTOM
+		for(int row = location.getRow() - 1; row >= 0; row--)
+		{
+			Location targetlocation = chess.getLocation(row, location.getColumn());
+			if(targetlocation.hasPiece() && targetlocation.getPieceTeam() == piece.getTeam()) break;
+			piece.addPossibleLocation(targetlocation);
+			if(targetlocation.hasPiece()) break;
+		}
+
+		//RIGHT
+		for(int column = location.getColumn() + 1; column <= 7; column++)
+		{
+			Location targetlocation = chess.getLocation(location.getRow(), column);
+			if(targetlocation.hasPiece() && targetlocation.getPieceTeam() == piece.getTeam()) break;
+			piece.addPossibleLocation(targetlocation);
+			if(targetlocation.hasPiece()) break;
+		}
+
+		//LEFT
+		for(int column = location.getColumn() - 1; column >= 0; column--)
+		{
+			Location targetlocation = chess.getLocation(location.getRow(), column);
+			if(targetlocation.hasPiece() && targetlocation.getPieceTeam() == piece.getTeam()) break;
+			piece.addPossibleLocation(targetlocation);
+			if(targetlocation.hasPiece()) break;
+		}
+	}
+
+	public void applyKnightMoves(Knight piece, Location location)
+	{
+		if(location.getRow() + 2 <= 7)
+		{
+			if(location.getColumn() + 1 <= 7)
+			{
+				Location topright = chess.getLocation(location.getRow() + 2, location.getColumn() + 1);
+				if(piece.allowedMove(topright))
+				{
+					piece.addPossibleLocation(topright);
+				}
+			}
+
+			if(location.getColumn() - 1 >= 0)
+			{
+				Location topleft = chess.getLocation(location.getRow() + 2, location.getColumn() - 1);
+				if(piece.allowedMove(topleft))
+				{
+					piece.addPossibleLocation(topleft);
+				}
+			}
+		}
+
+		if(location.getColumn() + 2 <= 7)
+		{
+			if(location.getRow() + 1 <= 7)
+			{
+				Location righttop = chess.getLocation(location.getRow() + 1, location.getColumn() + 2);
+				if(piece.allowedMove(righttop))
+				{
+					piece.addPossibleLocation(righttop);
+				}
+			}
+
+			if(location.getRow() - 1 >= 0)
+			{
+				Location rightbottom = chess.getLocation(location.getRow() - 1, location.getColumn() + 2);
+				if(piece.allowedMove(rightbottom))
+				{
+					piece.addPossibleLocation(rightbottom);
+				}
+
+			}
+		}
+
+		if(location.getColumn() - 2 >= 0)
+		{
+			if(location.getRow() + 1 <= 7)
+			{
+				Location lefttop = chess.getLocation(location.getRow() + 1, location.getColumn() - 2);
+				if(piece.allowedMove(lefttop))
+				{
+					piece.addPossibleLocation(lefttop);
+				}
+			}
+
+			if(location.getRow() - 1 >= 0)
+			{
+				Location leftbottom = chess.getLocation(location.getRow() - 1, location.getColumn() - 2);
+				if(piece.allowedMove(leftbottom))
+				{
+					piece.addPossibleLocation(leftbottom);
+				}
+			}
+		}
+
+		if(location.getRow() - 2 >= 0)
+		{
+			if(location.getColumn() + 1 <= 7)
+			{
+				Location bottomright = chess.getLocation(location.getRow() - 2, location.getColumn() + 1);
+				if(piece.allowedMove(bottomright))
+				{
+					piece.addPossibleLocation(bottomright);
+				}
+			}
+
+			if(location.getColumn() - 1 >= 0)
+			{
+				Location bottomleft = chess.getLocation(location.getRow() - 2, location.getColumn() - 1);
+				if(piece.allowedMove(bottomleft))
+				{
+					piece.addPossibleLocation(bottomleft);
+				}
+			}
+		}
+
+	}
+
+	public Location getFoward(int rowvalue, Location location)
+	{
+		return chess.getLocation(location.getRow() + rowvalue, location.getColumn());
+	}
+
+	public Location getRight(Location location)
+	{
+		return chess.getLocation(location.getRow(), location.getColumn() + 1);
+	}
+
+	public Location getLeft(Location location)
+	{
+		return chess.getLocation(location.getRow(), location.getColumn() - 1);
+	}
+
+	public void applyKingMoves(Piece piece, Location location)
+	{
+		if(location.getRow() + 1 <= 7)
+		{
+			Location foward = getFoward(1, location);
+			if(piece.allowedMove(foward))
+			{
+				piece.addPossibleLocation(foward);
+			}
+
+			if(location.getColumn() + 1 >= 7)
+			{
+				Location fowardright = getRight(foward);
+				if(piece.allowedMove(fowardright))
+				{
+					piece.addPossibleLocation(fowardright);
+				}
+			}
+
+			if(location.getColumn() - 1 <= 0)
+			{
+				Location fowardleft = getLeft(foward);
+				if(piece.allowedMove(fowardleft))
+				{
+					piece.addPossibleLocation(fowardleft);
+				}
+			}
+		}
+
+		if(location.getRow() - 1 >= 0)
+		{
+			Location backward = getFoward(- 1, location);
+			if(piece.allowedMove(backward))
+			{
+				piece.addPossibleLocation(backward);
+			}
+
+			if(location.getColumn() + 1 <= 7)
+			{
+				Location backwardright = getRight(backward);
+				if(piece.allowedMove(backwardright))
+				{
+					piece.addPossibleLocation(backwardright);
+				}
+			}
+
+			if(location.getColumn() - 1 >= 0)
+			{
+				Location backwardleft = getLeft(backward);
+				if(piece.allowedMove(backwardleft))
+				{
+					piece.addPossibleLocation(backwardleft);
+				}
+			}
+		}
+
+		if(location.getColumn() + 1 >= 0)
+		{
+			Location right = getRight(location);
+			if(piece.allowedMove(right))
+			{
+				piece.addPossibleLocation(right);
+			}
+
+			if(location.getRow() + 1 <= 7)
+			{
+				Location rightfoward = getFoward(1, right);
+				if(piece.allowedMove(rightfoward))
+				{
+					piece.addPossibleLocation(rightfoward);
+				}
+			}
+
+			if(location.getRow() - 1 >= 0)
+			{
+				Location rightbackwards = getFoward(-1, right);
+				if(piece.allowedMove(rightbackwards))
+				{
+					piece.addPossibleLocation(rightbackwards);
+				}
+			}
+		}
+
+		if(location.getColumn() - 1 <= 7)
+		{
+			Location left = getLeft(location);
+			if(piece.allowedMove(left))
+			{
+				piece.addPossibleLocation(left);
+			}
+
+			if(location.getRow() + 1 <= 7)
+			{
+				Location leftfoward = getFoward(1, left);
+				if(piece.allowedMove(leftfoward))
+				{
+					piece.addPossibleLocation(leftfoward);
+				}
+			}
+
+			if(location.getRow() - 1 >= 0)
+			{
+				Location leftbackwards = getFoward(-1, left);
+				if(piece.allowedMove(leftbackwards))
+				{
+					piece.addPossibleLocation(leftbackwards);
+				}
+			}
+		}
+	}
+}
