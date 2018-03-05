@@ -1,0 +1,98 @@
+package me.hacksmuch.pieces;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import me.hacksmuch.Chess;
+import me.hacksmuch.Location;
+import me.hacksmuch.Moves;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class Piece extends ImageView
+{
+	private final Chess chess;
+	private final Team team;
+
+	private Location location;
+
+	private List<Location> possiblemoves = new ArrayList<>();
+
+	Piece(Chess chess, Image image, Team team, Location startlocation)
+	{
+		super(image);
+
+		this.location = startlocation;
+		location.setPiece(this);
+		this.chess = chess;
+		this.team = team;
+	}
+
+	public void Move(Location location)
+	{
+		chess.endTurn();
+		this.location.drawDefaultColor();
+		this.location.move();
+		this.location = location;
+		location.setPiece(this);
+		undrawPossibleMoves();
+	}
+
+	private void undrawPossibleMoves()
+	{
+		possiblemoves.forEach(Location::drawDefaultColor);
+		possiblemoves.clear();
+	}
+
+	public boolean canMove(Location location)
+	{
+		return possiblemoves.contains(location);
+	}
+
+	abstract void markPossibleMoves();
+
+	public final void select()
+	{
+		chess.setSelected(this);
+		markPossibleMoves();
+		location.mark(Color.CYAN);
+	}
+
+	public final void deselect()
+	{
+		location.drawDefaultColor();
+		undrawPossibleMoves();
+	}
+
+	boolean canEat(Location location)
+	{
+		return location.hasPiece() && location.getPieceTeam() != team;
+	}
+
+	public boolean allowedMove(Location location)
+	{
+		return !location.hasPiece() || location.getPieceTeam() != team;
+	}
+
+	public final Team getTeam()
+	{
+		return team;
+	}
+
+	Moves getMoves()
+	{
+		return chess.getMoves();
+	}
+
+	public void addPossibleLocation(Location location)
+	{
+		location.mark(Color.RED);
+		possiblemoves.add(location);
+	}
+
+	final Location getLocation()
+	{
+		return location;
+	}
+}
