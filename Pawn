@@ -1,0 +1,78 @@
+package me.hacksmuch.pieces;
+
+import javafx.scene.image.Image;
+import me.hacksmuch.Chess;
+import me.hacksmuch.Location;
+import me.hacksmuch.images.ImageUtils;
+
+public class Pawn extends Piece
+{
+	private final ImageUtils imageutils;
+	private final Chess chess;
+	private boolean moved = false;
+
+	private int rowvalue;
+
+	public Pawn(Chess chess, Image img, Team team, Location location, ImageUtils imageutils)
+	{
+		super(chess, img, team, location);
+		this.imageutils = imageutils;
+		this.chess = chess;
+		if(team == Team.BLACK)
+		{
+			rowvalue = 1;
+		} else
+		{
+			rowvalue = -1;
+		}
+	}
+
+	void markPossibleMoves()
+	{
+		if(getLocation().getRow() < 7 && getLocation().getRow() > 0)
+		{
+			Location foward = getMoves().getFoward(rowvalue, getLocation());
+			if(!foward.hasPiece())
+			{
+				addPossibleLocation(foward);
+			}
+
+			if(!moved)
+			{
+				Location fowardfoward = getMoves().getFoward(rowvalue, foward);
+				if(!fowardfoward.hasPiece())
+				{
+					addPossibleLocation(fowardfoward);
+				}
+			}
+
+			if(getLocation().getColumn() < 7)
+			{
+				Location fowardright = getMoves().getRight(foward);
+				if(canEat(fowardright))
+				{
+					addPossibleLocation(fowardright);
+				}
+			}
+
+			if(getLocation().getColumn() > 0)
+			{
+				Location fowardleft = getMoves().getLeft(foward);
+				if(canEat(fowardleft))
+				{
+					addPossibleLocation(fowardleft);
+				}
+			}
+		}
+	}
+
+	public void Move(Location location)
+	{
+		super.Move(location);
+		if(!moved) moved = true;
+		if(location.getRow() == 7 || location.getRow() == 0)
+		{
+			new Queen(chess, getTeam() == Team.BLACK ? imageutils.getBlackQueen() : imageutils.getWhiteQueen(), getTeam(), location);
+		}
+	}
+}
