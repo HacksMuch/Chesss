@@ -1,0 +1,210 @@
+package me.hacksmuch;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
+import me.hacksmuch.images.ImageUtils;
+import me.hacksmuch.pieces.*;
+
+import java.util.Map;
+
+public class Chess extends Application
+{
+	public static void main(String[] args)
+	{
+		launch(args);
+	}
+
+	public void start(Stage s)
+	{
+		initFrame(s, new ImageUtils());
+		s.show();
+	}
+
+	private final Board board = new Board(this);
+	private final Moves moves = new Moves(this);
+	private Piece selected;
+	private int turn = 1;
+	private Piece white_checker;
+	private Piece black_checker;
+
+	private King white_king;
+	private King black_king;
+
+	private void initFrame(Stage s, ImageUtils iu)
+	{
+		for(int column = 0; column < 8; column++)
+		{
+			createPawn(getLocation(1, column), iu.getBlackPawn(), Team.BLACK, iu);
+		}
+
+		for(int column = 0; column < 8; column++)
+		{
+			createPawn(getLocation(6, column), iu.getWhitePawn(), Team.WHITE, iu);
+		}
+
+		createRook(getLocation(0, 0), iu.getBlackRook(), Team.BLACK);
+		createKnight(getLocation(0, 1), iu.getBlackKnight(), Team.BLACK);
+		createBishop(getLocation(0, 2), iu.getBlackBishop(), Team.BLACK);
+		createQueen(getLocation(0, 3), iu.getBlackQueen(), Team.BLACK);
+		createKing(getLocation(0, 4), iu.getBlackKing(), Team.BLACK);
+		createBishop(getLocation(0, 5), iu.getBlackBishop(), Team.BLACK);
+		createKnight(getLocation(0, 6), iu.getBlackKnight(), Team.BLACK);
+		createRook(getLocation(0, 7), iu.getBlackRook(), Team.BLACK);
+
+		createRook(getLocation(7, 0), iu.getWhiteRook(), Team.WHITE);
+		createKnight(getLocation(7, 1), iu.getWhiteKnight(), Team.WHITE);
+		createBishop(getLocation(7, 2), iu.getWhiteBishop(), Team.WHITE);
+		createQueen(getLocation(7, 3), iu.getWhiteQueen(), Team.WHITE);
+		createKing(getLocation(7, 4), iu.getWhiteKing(), Team.WHITE);
+		createBishop(getLocation(7, 5), iu.getWhiteBishop(), Team.WHITE);
+		createKnight(getLocation(7, 6), iu.getWhiteKnight(), Team.WHITE);
+		createRook(getLocation(7, 7), iu.getWhiteRook(), Team.WHITE);
+
+		Scene sc = new Scene(board, 600, 600);
+		s.setScene(sc);
+	}
+
+	private void createPawn(Location location, Image img, Team team, ImageUtils imageUtils)
+	{
+		new Pawn(this, img, team, location, imageUtils);
+	}
+
+	private void createRook(Location location, Image img, Team team)
+	{
+		new Rook(this, img, team, location);
+	}
+
+	private void createKnight(Location location, Image img, Team team)
+	{
+		new Knight(this, img, team, location);
+	}
+
+	private void createBishop(Location location, Image img, Team team)
+	{
+		new Bishop(this, img, team, location);
+	}
+
+	private void createQueen(Location location, Image img, Team team)
+	{
+		new Queen(this, img, team, location);
+	}
+
+	private void createKing(Location location, Image img, Team team)
+	{
+		King king = new King(this, img, team, location);
+		if(team == Team.BLACK)
+		{
+			black_king = king;
+		} else
+		{
+			white_king = king;
+		}
+	}
+
+	public void setSelected(Piece selected)
+	{
+		if(this.selected != null)
+		{
+			this.selected.deselect();
+		}
+		this.selected = selected;
+	}
+
+	public void deselect()
+	{
+		if(this.selected != null)
+		{
+			this.selected.deselect();
+		}
+		selected = null;
+	}
+
+	public Location getLocation(int row, int column)
+	{
+		return board.getLocation(row, column);
+	}
+
+	public Moves getMoves()
+	{
+		return moves;
+	}
+
+	public Piece getSelected()
+	{
+		return selected;
+	}
+
+	public int getTurn()
+	{
+		return turn;
+	}
+
+	public void endTurn()
+	{
+		turn = turn == 0 ? 1 : 0;
+	}
+
+	public void win(Team team)
+	{
+		Alert win = new Alert(Alert.AlertType.INFORMATION);
+		win.setHeaderText(null);
+		win.setContentText(team.name() + " WON!");
+		win.showAndWait();
+		System.exit(0);
+	}
+
+	public void check(Piece checker, Team team)
+	{
+		if(team == Team.BLACK)
+		{
+			black_checker = checker;
+		} else
+		{
+			white_checker = checker;
+		}
+	}
+
+	public void avoidedCheck(Team team)
+	{
+		if(team == Team.BLACK)
+		{
+			black_checker = null;
+		} else
+		{
+			white_checker = null;
+		}
+	}
+
+	public boolean isBlackChecked()
+	{
+		return black_checker != null;
+	}
+
+	public boolean isWhiteChecked()
+	{
+		return white_checker != null;
+	}
+
+	public King getWhiteKing()
+	{
+		return white_king;
+	}
+
+	public King getBlackKing()
+	{
+		return black_king;
+	}
+
+	public Piece getWhiteChecker()
+	{
+		return white_checker;
+	}
+
+	public Piece getBlackChecker()
+	{
+		return black_checker;
+	}
+}
