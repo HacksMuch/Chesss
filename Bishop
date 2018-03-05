@@ -1,0 +1,18 @@
+package me.hacksmuch.pieces;
+
+import javafx.scene.image.Image;
+import me.hacksmuch.Chess;
+import me.hacksmuch.Location;
+
+public class Bishop extends Piece
+{
+	public Bishop(Chess chess, Image image, Team team, Location startlocation)
+	{
+		super(chess, image, team, startlocation);
+	}
+
+	void markPossibleMoves()
+	{
+		getMoves().apply75Degrees(this, getLocation());
+	}
+}
