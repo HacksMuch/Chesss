@@ -1,0 +1,21 @@
+package me.hacksmuch.pieces;
+
+import javafx.scene.image.Image;
+import me.hacksmuch.Chess;
+import me.hacksmuch.Location;
+import me.hacksmuch.Moves;
+
+import java.util.List;
+
+public class Rook extends Piece
+{
+	public Rook(Chess chess, Image image, Team team, Location startlocation)
+	{
+		super(chess, image, team, startlocation);
+	}
+
+	void markPossibleMoves()
+	{
+		getMoves().applyFowards(this, getLocation());
+	}
+}
