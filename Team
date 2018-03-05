@@ -1,0 +1,6 @@
+package me.hacksmuch.pieces;
+
+public enum Team
+{
+	WHITE, BLACK
+}
